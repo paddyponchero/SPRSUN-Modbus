@@ -1,5 +1,5 @@
 # SDM120-Modbus
-Eastron SDM120-Modbus RTU Single Phase kWh Meter
+Eastron SDM120-Modbus RTU Single Phase kWh Meter Python Plugin for Domoticz
 
 Forked from MFxMF/SDM630-Modbus
 
@@ -20,5 +20,5 @@ minimalmodbus -> http://minimalmodbus.readthedocs.io<br>
 Restart your domoticz server using - sudo service domoticz.sh restart
 <br>
 <br>
-Tested on domoticz 2021.1 ane 2023.1
+Tested on domoticz 2021.1 and 2023.1, Python 3.9.2.  MinimalModbus included is 2.0.1
 
