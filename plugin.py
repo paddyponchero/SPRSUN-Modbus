@@ -92,7 +92,7 @@ class BasePlugin:
                  self.rs485.serial.parity = minimalmodbus.serial.PARITY_NONE
                  self.rs485.serial.stopbits = 1
                  self.rs485.serial.timeout = 1
-                 self.rs485.serial.exclusive = True # From Forum
+                 self.rs485.serial.exclusive = True # Fix From Forum Member 'lost'
                  self.rs485.debug = False
                             
                  self.rs485.mode = minimalmodbus.MODE_RTU
@@ -106,7 +106,7 @@ class BasePlugin:
                  Import_power = self.rs485.read_float(88, 4, 2)
                  Export_power = self.rs485.read_float(92, 4, 2)
                  #self.rs485.read_float(register, functioncode, numberOfRegisters)
-                 self.rs485.serial.close()  #  Close that door ! // does this even work !! ??
+                 self.rs485.serial.close()  #  Close that door !
             except:
                 Domoticz.Heartbeat(1)   # set Heartbeat to 1 second to get us back here for quick retry.
                 self.runInterval = 1    # call again in 10 seconds
