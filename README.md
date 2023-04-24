@@ -3,7 +3,7 @@ Eastron SDM120-Modbus RTU Single Phase kWh Meter
 
 Forked from MFxMF/SDM630-Modbus
 
-This version allow multiple instances to work on Domoticz 2023.1 which uses multithreaded loading of the Plugins.
+This version allows multiple instances to work on Domoticz 2023.1 which uses multithreaded loading of the Plugins.
 Exclusive access on the serial port is now enforced to ensure only one instance at a time can access that port.
 
 Has been tested on a USB to RS485 interface (FTDI FT232R chip) with 20 Plugin instances accessing several SDM120M and SDM120M-CT meters.
