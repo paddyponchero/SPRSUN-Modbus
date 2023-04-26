@@ -109,7 +109,7 @@ class BasePlugin:
                  self.rs485.serial.close()  #  Close that door !
             except:
                 Domoticz.Heartbeat(1)   # set Heartbeat to 1 second to get us back here for quick retry.
-                self.runInterval = 1    # call again in 10 seconds
+                self.runInterval = 1    # call again in 1 second
                 Domoticz.Log("**** SDM120M Connection problem ****");
             else:
                 #Update devices
