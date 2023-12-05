@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """
-SPRSUN-Modbus-READ Heat Pump. The Python plugin for Domoticz
+SPRSUN-Modbus Heat Pump. The Python plugin for Domoticz
 Original Author: MFxMF and bbossink and remcovanvugt
 Better Error handling and event recovery added by simat-git 2023.
 Converted from Eastron SDM120M to SPRSUN plugin by Sateetje 2023.
 
-Works with SPRSUN HeatPump CGK0x0V2 to read registers.
+Works with SPRSUN HeatPump CGK0x0V2.
 
 Requirements: 
     1.python module minimalmodbus -> http://minimalmodbus.readthedocs.io/en/master/
@@ -13,7 +13,7 @@ Requirements:
     2.Communication module Modbus USB to RS485 converter module
 """
 """
-<plugin key="SPRSUN" name="SPRSUN-Modbus-READ" version="1" author="Sateetje">
+<plugin key="SPRSUN" name="SPRSUN-Modbus" version="1" author="Sateetje">
     <params>
         <param field="SerialPort" label="Modbus Port" width="200px" required="true" default="/dev/ttyUSB0" />
         <param field="Mode1" label="Baud rate" width="40px" required="true" default="19200"  />
@@ -44,7 +44,7 @@ class BasePlugin:
     def onStart(self):
         
         devicecreated = []
-        Domoticz.Log("SPRSUN-Modbus-READ plugin start")
+        Domoticz.Log("SPRSUN-Modbus plugin start")
         self.runInterval = int(Parameters["Mode3"]) * 1 
         
         if 1 not in Devices:
@@ -52,7 +52,7 @@ class BasePlugin:
             Options = { "Custom" : "1;C"} 
 
     def onStop(self):
-        Domoticz.Log("SPRSUN-Modbus-READ plugin stop")
+        Domoticz.Log("SPRSUN-Modbus plugin stop")
 
     def onHeartbeat(self):
         self.runInterval -=1;
