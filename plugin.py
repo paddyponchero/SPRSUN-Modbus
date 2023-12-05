@@ -72,7 +72,7 @@ class BasePlugin:
             Ambient_Temperature = 0
             Hot_Water_Temperature = 0 
             
-            # Get data from SPRSUB
+            # Get data from SPRSUN
             try:
                  self.rs485 = minimalmodbus.Instrument(Parameters["SerialPort"], int(Parameters["Mode2"]))
                  #class minimalmodbus.Instrument(port: str, slaveaddress: int, mode: str = 'rtu', close_port_after_each_call: bool = False, debug: bool = False)
