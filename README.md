@@ -1,16 +1,16 @@
-# SDM120-Modbus
-Eastron SDM120-Modbus RTU Single Phase kWh Meter Python Plugin for Domoticz
+# SPRSUN-Modbus-READ
+SPRSUN-Modbus-READ Heat Pump Python Plugin for Domoticz
 
-Forked from MFxMF/SDM630-Modbus
+Forked from simat-git/SDM120-Modbus 
 
 This version allows multiple instances to work on Domoticz 2023.1 which uses multithreaded loading of the Plugins.
 Exclusive access on the serial port is now enforced to ensure only one instance at a time can access that port.
 
-Has been tested on a USB to RS485 interface (FTDI FT232R chip) with 20 Plugin instances accessing several SDM120M and SDM120M-CT meters.
+Has been tested on a USB to RS485 interface (FTDI FT232R chip) with a couple of Plugin instances accessing a SPRSUN Heat Pump.
 
 Installation: <br>
 cd ~/domoticz/plugins<br>
-git clone https://github.com/simat-git/SDM120-Modbus <br>
+git clone https://github.com/Sateetje/SPRSUN-Modbus<br>
 
 <br>
 Used python modules: <br>
