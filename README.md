@@ -15,7 +15,7 @@ git clone https://github.com/Sateetje/SPRSUN-Modbus<br>
 <br>
 Used python modules: <br>
 pyserial -> -https://pythonhosted.org/pyserial/ <br>
-minimalmodbus -> http://minimalmodbus.readthedocs.io<br>
+minimalmodbus -> http://minimalmodbus.readthedocs.io -> pip install minimalmodbus --break-system-packages<br>
 <br>
 Restart your domoticz server using - sudo service domoticz.sh restart
 <br>
