@@ -58,7 +58,9 @@ class BasePlugin:
             Options = { "Custom" : "1;C"}                
         if 4 not in Devices:
             Domoticz.Device(Name="Hot water temperature", Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
-            Options = { "Custom" : "1;C"}             
+            Options = { "Custom" : "1;C"}
+        #if 5 not in Devices:
+        #    Domoticz.Device(Name="Power on", Unit=1,TypeName="Light/Switch",Subtype="Switch",Switchtype=0,Used=0).Create()             
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -70,7 +72,8 @@ class BasePlugin:
             Return_Water_Temperature = 0 #  Declare these to keep the debug section at the bottom from complaining.
             Outlet_Temperature = 0
             Ambient_Temperature = 0
-            Hot_Water_Temperature = 0 
+            Hot_Water_Temperature = 0
+            #Power_On = 0
             
             # Get data from SPRSUN
             try:
@@ -87,10 +90,11 @@ class BasePlugin:
                  self.rs485.mode = minimalmodbus.MODE_RTU
                  self.rs485.close_port_after_each_call = True
                  
-                 Return_Water_Temperature = self.rs485.read_float(188, 4, 1)
-                 Outlet_Temperature = self.rs485.read_float(189, 4, 1)
-                 Ambient_Temperature = self.rs485.read_float(190, 4, 1)
-                 Hot_Water_Temperature = self.rs485.read_float(195, 4, 1)
+                 Return_Water_Temperature = self.rs485.read_float(188, 3, 1)
+                 Outlet_Temperature = self.rs485.read_float(189, 3, 1)
+                 Ambient_Temperature = self.rs485.read_float(190, 3, 1)
+                 Hot_Water_Temperature = self.rs485.read_float(195, 3, 1)
+                 #Power_On = self.rs485.read_bit(0, 1, 1)
                  #self.rs485.read_float(register, functioncode, numberOfRegisters)
                  self.rs485.serial.close()  #  Close that door !
             except:
@@ -103,6 +107,7 @@ class BasePlugin:
                 Devices[2].Update(0,str(Outlet_Temperature))
                 Devices[3].Update(0,str(Ambient_Temperature))
                 Devices[4].Update(0,str(Hot_Water_Temperature))
+                #Devices[5].Update(0,str(Power_On))
                 self.runInterval = int(Parameters["Mode3"]) * 6 # Success so call again in 60 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
 
@@ -113,6 +118,7 @@ class BasePlugin:
                 Domoticz.Log('Outlet temperature: {0:.1f} C'.format(Outlet_Temperature))
                 Domoticz.Log('Ambient temperature: {0:.1f} C'.format(Ambient_Temperature))
                 Domoticz.Log('Hot water temperature: {0:.1f} C'.format(Hot_Water_Temperature))
+                #Domoticz.Log('Power on: {0}'.format(Power_On))
 
             #self.runInterval = int(Parameters["Mode3"]) * 6
 
