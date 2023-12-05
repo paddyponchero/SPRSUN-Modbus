@@ -58,7 +58,7 @@ class BasePlugin:
             Domoticz.Device(Name="Hot water temperature",Unit=4,Type=80,Subtype=5,Used=1).Create()
             Options = { "Custom" : "1;C"}
         if 5 not in Devices:
-            Domoticz.Device(Name="Power on",Unit=5,Type=73,Switchtype=0,Used=1).Create()
+            Domoticz.Device(Name="Power on",Unit=5,Type=244,Subtype=73,Switchtype=0,Used=1).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
