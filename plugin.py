@@ -31,36 +31,34 @@ Requirements:
 """
 
 import minimalmodbus    #v2.0.1
-#import serial          #minimalmodbus imports this now.
 import Domoticz         #tested on Python 3.9.2 in Domoticz 2021.1 and 2023.1
 
 
 class BasePlugin:
     def __init__(self):
         self.runInterval = 1
-        self.rs485 = "" 
+        self.rs485 = ""
         return
 
     def onStart(self):
-        
         devicecreated = []
         Domoticz.Log("SPRSUN-Modbus plugin start")
         self.runInterval = int(Parameters["Mode3"]) * 1 
-        
+
         if 1 not in Devices:
-            Domoticz.Device(Name="Return water temperature", Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
+            Domoticz.Device(Name="SPRSUN - Return water temperature",Unit=1,Type=80,Subtype=5,Used=1).Create()
             Options = { "Custom" : "1;C"}
-        if 2 not in Devices:
-            Domoticz.Device(Name="Outlet temperature", Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
-            Options = { "Custom" : "1;C"}
-        if 3 not in Devices:
-            Domoticz.Device(Name="Ambient temperature", Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
-            Options = { "Custom" : "1;C"}                
-        if 4 not in Devices:
-            Domoticz.Device(Name="Hot water temperature", Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
-            Options = { "Custom" : "1;C"}
-        #if 5 not in Devices:
-        #    Domoticz.Device(Name="Power on", Unit=1,TypeName="Light/Switch",Subtype="Switch",Switchtype=0,Used=0).Create()             
+#        if 2 not in Devices:
+#            Domoticz.Device(Name="SPRSUN - Outlet temperature",Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
+#            Options = { "Custom" : "1;C"}
+#        if 3 not in Devices:
+#            Domoticz.Device(Name="SPRSUN - Ambient temperature",Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
+#            Options = { "Custom" : "1;C"}
+#        if 4 not in Devices:
+#            Domoticz.Device(Name="SPRSUN - Hot water temperature",Unit=1,TypeName="Temp",Subtype="LaCrosse TX3",Used=0).Create()
+#            Options = { "Custom" : "1;C"}
+#        if 5 not in Devices:
+#            Domoticz.Device(Name="SPRSUN - Power on",Unit=1,TypeName="Light/Switch",Subtype="Switch",Switchtype=0,Used=0).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -70,9 +68,9 @@ class BasePlugin:
         if self.runInterval <= 0:
 
             Return_Water_Temperature = 0 #  Declare these to keep the debug section at the bottom from complaining.
-            Outlet_Temperature = 0
-            Ambient_Temperature = 0
-            Hot_Water_Temperature = 0
+            #Outlet_Temperature = 0
+            #Ambient_Temperature = 0
+            #Hot_Water_Temperature = 0
             #Power_On = 0
             
             # Get data from SPRSUN
@@ -91,9 +89,9 @@ class BasePlugin:
                  self.rs485.close_port_after_each_call = True
                  
                  Return_Water_Temperature = self.rs485.read_float(188, 3, 1)
-                 Outlet_Temperature = self.rs485.read_float(189, 3, 1)
-                 Ambient_Temperature = self.rs485.read_float(190, 3, 1)
-                 Hot_Water_Temperature = self.rs485.read_float(195, 3, 1)
+                 #Outlet_Temperature = self.rs485.read_float(189, 3, 1)
+                 #Ambient_Temperature = self.rs485.read_float(190, 3, 1)
+                 #Hot_Water_Temperature = self.rs485.read_float(195, 3, 1)
                  #Power_On = self.rs485.read_bit(0, 1, 1)
                  #self.rs485.read_float(register, functioncode, numberOfRegisters)
                  self.rs485.serial.close()  #  Close that door !
@@ -115,9 +113,9 @@ class BasePlugin:
             if Parameters["Mode6"] == 'Debug':
                 Domoticz.Log("SPRSUN Modbus Data")
                 Domoticz.Log('Return water temperature: {0:.1f} C'.format(Return_Water_Temperature))
-                Domoticz.Log('Outlet temperature: {0:.1f} C'.format(Outlet_Temperature))
-                Domoticz.Log('Ambient temperature: {0:.1f} C'.format(Ambient_Temperature))
-                Domoticz.Log('Hot water temperature: {0:.1f} C'.format(Hot_Water_Temperature))
+                #Domoticz.Log('Outlet temperature: {0:.1f} C'.format(Outlet_Temperature))
+                #Domoticz.Log('Ambient temperature: {0:.1f} C'.format(Ambient_Temperature))
+                #Domoticz.Log('Hot water temperature: {0:.1f} C'.format(Hot_Water_Temperature))
                 #Domoticz.Log('Power on: {0}'.format(Power_On))
 
             #self.runInterval = int(Parameters["Mode3"]) * 6
