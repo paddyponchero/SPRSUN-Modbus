@@ -1,4 +1,4 @@
-# SPRSUN-Modbus
+# SPRSUN-Modbus (NOT TESTED YET)
 SPRSUN-Modbus Heat Pump Python Plugin for Domoticz
 
 Forked from simat-git/SDM120-Modbus 
