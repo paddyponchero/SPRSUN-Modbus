@@ -87,10 +87,10 @@ class BasePlugin:
                  self.rs485.mode = minimalmodbus.MODE_RTU
                  self.rs485.close_port_after_each_call = True
 
-                 Return_Water_Temperature = self.rs485.read_register(188,0,3,False) / 10
-                 Outlet_Temperature = self.rs485.read_register(189,0,3,False) / 10
-                 Ambient_Temperature = self.rs485.read_register(190,0,3,False) / 10
-                 Hot_Water_Temperature = self.rs485..read_register(195,0,3,False) / 10
+                 Return_Water_Temperature = self.rs485.read_register(188,1,3,False)
+                 Outlet_Temperature = self.rs485.read_register(189,1,3,False)
+                 Ambient_Temperature = self.rs485.read_register(190,1,3,False)
+                 Hot_Water_Temperature = self.rs485.read_register(195,1,3,False)
                  #Power_On = self.rs485.read_bit(0, 1)
                  #self.rs485.read_float(register, functioncode, numberOfRegisters)
                  self.rs485.serial.close()  #  Close that door !
