@@ -84,15 +84,14 @@ class BasePlugin:
                  self.rs485.serial.timeout = 1
                  self.rs485.serial.exclusive = True # Fix From Forum Member 'lost'
                  self.rs485.debug = False
-
                  self.rs485.mode = minimalmodbus.MODE_RTU
                  self.rs485.close_port_after_each_call = True
 
-                 Return_Water_Temperature = self.rs485.read_float(188, 3, 1)
-                 Outlet_Temperature = self.rs485.read_float(189, 3, 1)
-                 Ambient_Temperature = self.rs485.read_float(190, 3, 1)
-                 Hot_Water_Temperature = self.rs485.read_float(195, 3, 1)
-                 Power_On = self.rs485.read_bit(0, 1, 1)
+                 Return_Water_Temperature = self.rs485.read_register(188,0,3,False) / 10
+                 Outlet_Temperature = self.rs485.read_register(189,0,3,False) / 10
+                 Ambient_Temperature = self.rs485.read_register(190,0,3,False) / 10
+                 Hot_Water_Temperature = self.rs485..read_register(195,0,3,False) / 10
+                 #Power_On = self.rs485.read_bit(0, 1)
                  #self.rs485.read_float(register, functioncode, numberOfRegisters)
                  self.rs485.serial.close()  #  Close that door !
             except:
