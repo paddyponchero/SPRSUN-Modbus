@@ -1,4 +1,4 @@
-# SPRSUN-Modbus (NOT TESTED YET)
+# SPRSUN-Modbus
 SPRSUN-Modbus Heat Pump Python Plugin for Domoticz
 
 Forked from simat-git/SDM120-Modbus 
@@ -19,5 +19,5 @@ minimalmodbus -> http://minimalmodbus.readthedocs.io<br>
 Restart your domoticz server using - sudo service domoticz.sh restart
 <br>
 <br>
-Tested on domoticz 2021.1 and 2023.1, Python 3.9.2.  MinimalModbus included is 2.0.1
+Tested on domoticz 2023.2, Python 3.11.2.  MinimalModbus included is 2.1.1
 
