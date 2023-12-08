@@ -18,7 +18,6 @@ Requirements:
         <param field="SerialPort" label="Modbus Port" width="200px" required="true" default="/dev/ttyUSB0" />
         <param field="Mode1" label="Baud rate" width="40px" required="true" default="19200"  />
         <param field="Mode2" label="Device ID" width="40px" required="true" default="1" />
-        <param field="Mode3" label="Reading Interval min." width="40px" required="true" default="1" />
         <param field="Mode6" label="Debug" width="75px">
             <options>
                 <option label="True" value="Debug"/>
@@ -43,7 +42,7 @@ class BasePlugin:
     def onStart(self):
         devicecreated = []
         Domoticz.Log("SPRSUN-Modbus plugin start")
-        self.runInterval = int(Parameters["Mode3"]) * 1
+        self.runInterval = 1
 
         #https://github.com/domoticz/domoticz/blob/master/hardware/hardwaretypes.h
         if 1 not in Devices:
@@ -190,7 +189,7 @@ class BasePlugin:
                 Devices[16].Update(0,StatusText)
                 Devices[17].Update(ThreeWayValve,"")
 
-                self.runInterval = int(Parameters["Mode3"]) * 6 # Success so call again in 60 seconds.
+                self.runInterval = 1    # Success so call again in 1x10 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
 
             if Parameters["Mode6"] == 'Debug':
