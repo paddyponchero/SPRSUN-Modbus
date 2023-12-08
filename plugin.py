@@ -80,6 +80,8 @@ class BasePlugin:
             Domoticz.Device(Name="Status",Unit=16,Type=243,Subtype=19,Used=1).Create()
         if 17 not in Devices:
             Domoticz.Device(Name="Three-way valve",Unit=17,Type=244,Subtype=73,Switchtype=0,Image=9,Used=1).Create()
+        if 18 not in Devices:
+            Domoticz.Device(Name="Heater",Unit=18,Type=244,Subtype=73,Switchtype=0,Image=15,Used=1).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -106,6 +108,7 @@ class BasePlugin:
             Status = 0
             StatusText = "Unknown"
             ThreeWayValve = 0
+            Heater = 0
 
             # Get data from SPRSUN
             try:
@@ -137,6 +140,7 @@ class BasePlugin:
                  Mode = self.rs485.read_register(0,0,3,False)
                  Status = self.rs485.read_register(217,0,3,False)
                  ThreeWayValve = self.rs485.read_bit(11, 1)
+                 Heater = self.rs485.read_bit(12, 1)
 
                  #Convert State to Text
                  if Status == 0:
@@ -188,6 +192,7 @@ class BasePlugin:
                 Devices[15].Update(nValue=int((Mode+1)*10),sValue=str((Mode+1)*10))
                 Devices[16].Update(0,StatusText)
                 Devices[17].Update(ThreeWayValve,"")
+                Devices[18].Update(Heater,"")
 
                 self.runInterval = 1    # Success so call again in 1x10 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
@@ -211,6 +216,7 @@ class BasePlugin:
                 Domoticz.Log('Mode: {0}'.format(Mode))
                 Domoticz.Log('Status: ' + StatusText)
                 Domoticz.Log('Three-way valve: {0}'.format(ThreeWayValve))
+                Domoticz.Log('Heater: {0}'.format(Heater))
 
     def onCommand(self, Unit, Command, Level, Hue):
             Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
