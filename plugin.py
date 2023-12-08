@@ -77,7 +77,7 @@ class BasePlugin:
         if 15 not in Devices:
             Domoticz.Device(Name="Mode",Unit=15,TypeName="Selector Switch",Options=Options,Image=15,Used=1).Create()
         if 16 not in Devices:
-            Domoticz.Device(Name="State",Unit=16,Type=243,Subtype=19,Used=1).Create()
+            Domoticz.Device(Name="Status",Unit=16,Type=243,Subtype=19,Used=1).Create()
         if 17 not in Devices:
             Domoticz.Device(Name="Three-way valve",Unit=17,Type=244,Subtype=73,Switchtype=0,Image=9,Used=1).Create()
 
