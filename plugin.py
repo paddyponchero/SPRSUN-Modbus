@@ -3,7 +3,7 @@
 SPRSUN-Modbus Heat Pump. The Python plugin for Domoticz
 Original Author: MFxMF and bbossink and remcovanvugt
 Better Error handling and event recovery added by simat-git 2023.
-Converted from Eastron SDM120M to SPRSUN plugin by Sateetje 2023 (needs some refactoring :))
+Converted from Eastron SDM120M to SPRSUN plugin by Sateetje 2023.
 
 Works with SPRSUN HeatPump CGK0x0V2.
 
@@ -77,6 +77,10 @@ class BasePlugin:
         Options = {"LevelActions": "|| ||", "LevelNames": "Off|Cooling|Heating|Hot Water|Hot Water + Cooling|Hot Water + Heating", "LevelOffHidden": "true", "SelectorStyle": "1"}
         if 15 not in Devices:
             Domoticz.Device(Name="Mode",Unit=15,TypeName="Selector Switch",Options=Options,Image=15,Used=1).Create()
+        if 16 not in Devices:
+            Domoticz.Device(Name="State",Unit=16,Type=243,Subtype=19,Used=1).Create()
+        if 17 not in Devices:
+            Domoticz.Device(Name="Three-way valve",Unit=17,Type=244,Subtype=73,Switchtype=0,Image=9,Used=1).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -100,6 +104,9 @@ class BasePlugin:
             SP_Hot_Water = 0
             SP_Heating = 0
             Mode = 0
+            Status = 0
+            StatusText = "Unknown"
+            ThreeWayValve = 0
 
             # Get data from SPRSUN
             try:
@@ -129,6 +136,34 @@ class BasePlugin:
                  SP_Hot_Water = self.rs485.read_register(3,1,3,False)
                  SP_Heating = self.rs485.read_register(1,1,3,False)
                  Mode = self.rs485.read_register(0,0,3,False)
+                 Status = self.rs485.read_register(217,0,3,False)
+                 ThreeWayValve = self.rs485.read_bit(11, 1)
+
+                 #Convert State to Text
+                 if Status == 0:
+                      StatusText = "Unit not Ready"
+                 elif Status == 1:
+                      StatusText = "Unit ON"
+                 elif Status == 2:
+                      StatusText = "OFF by Alarm"
+                 elif Status == 3:
+                      StatusText = "OFF by Timezone"
+                 elif Status == 4:
+                      StatusText = "OFF by SuperV"
+                 elif Status == 5:
+                      StatusText = "OFF by Linkage"
+                 elif Status == 6:
+                      StatusText = "OFF by Keyboad"
+                 elif Status == 7:
+                      StatusText = "Manual Mode"
+                 elif Status == 8:
+                      StatusText = "Anti Freeze"
+                 elif Status == 9:
+                      StatusText = "OFF by AC Linkage"
+                 elif Status == 10:
+                      StatusText = "OFF by Change"
+                 else:
+                      StatusText == "Unknown"
 
                  self.rs485.serial.close()  #  Close that door !
             except:
@@ -152,6 +187,8 @@ class BasePlugin:
                 Devices[13].Update(nValue=int(SP_Hot_Water),sValue=str(SP_Hot_Water))
                 Devices[14].Update(nValue=int(SP_Heating),sValue=str(SP_Heating))
                 Devices[15].Update(nValue=int((Mode+1)*10),sValue=str((Mode+1)*10))
+                Devices[16].Update(0,StatusText)
+                Devices[17].Update(ThreeWayValve,"")
 
                 self.runInterval = int(Parameters["Mode3"]) * 6 # Success so call again in 60 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
@@ -173,6 +210,8 @@ class BasePlugin:
                 Domoticz.Log('Hot water setpoint: {0:.1f}'.format(SP_Hot_Water))
                 Domoticz.Log('Heating setpoint: {0:.1f}'.format(SP_Heating))
                 Domoticz.Log('Mode: {0}'.format(Mode))
+                Domoticz.Log('Status: ' + StatusText)
+                Domoticz.Log('Three-way valve: {0}'.format(ThreeWayValve))
 
     def onCommand(self, Unit, Command, Level, Hue):
             Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
