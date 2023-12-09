@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 SPRSUN-Modbus Heat Pump. The Python plugin for Domoticz
 Original Author: MFxMF and bbossink and remcovanvugt
@@ -79,9 +78,11 @@ class BasePlugin:
         if 16 not in Devices:
             Domoticz.Device(Name="Status",Unit=16,Type=243,Subtype=19,Used=1).Create()
         if 17 not in Devices:
-            Domoticz.Device(Name="Three-way valve",Unit=17,Type=244,Subtype=73,Switchtype=0,Image=9,Used=1).Create()
+            Domoticz.Device(Name="Three-way valve",Unit=17,Type=244,Subtype=73,Switchtype=0,Used=1).Create()
         if 18 not in Devices:
             Domoticz.Device(Name="Heater",Unit=18,Type=244,Subtype=73,Switchtype=0,Image=15,Used=1).Create()
+        if 19 not in Devices:
+            Domoticz.Device(Name="Linkage",Unit=19,Type=244,Subtype=73,Switchtype=2,Used=1).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -109,6 +110,7 @@ class BasePlugin:
             StatusText = "Unknown"
             ThreeWayValve = 0
             Heater = 0
+            Linkage = 0
 
             # Get data from SPRSUN
             try:
@@ -139,8 +141,9 @@ class BasePlugin:
                  SP_Heating = self.rs485.read_register(1,1,3,False)
                  Mode = self.rs485.read_register(0,0,3,False)
                  Status = self.rs485.read_register(217,0,3,False)
-                 ThreeWayValve = self.rs485.read_bit(11, 1)
-                 Heater = self.rs485.read_bit(12, 1)
+                 ThreeWayValve = self.rs485.read_bit(11, 2)
+                 Heater = self.rs485.read_bit(12, 2)
+                 Linkage = self.rs485.read_bit(3, 2)
 
                  #Convert State to Text
                  if Status == 0:
@@ -193,6 +196,7 @@ class BasePlugin:
                 Devices[16].Update(0,StatusText)
                 Devices[17].Update(ThreeWayValve,"")
                 Devices[18].Update(Heater,"")
+                Devices[19].Update(Linkage,"")
 
                 self.runInterval = 1    # Success so call again in 1x10 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
@@ -217,6 +221,7 @@ class BasePlugin:
                 Domoticz.Log('Status: ' + StatusText)
                 Domoticz.Log('Three-way valve: {0}'.format(ThreeWayValve))
                 Domoticz.Log('Heater: {0}'.format(Heater))
+                Domoticz.Log('Linkage: {0}'.format(Linkage))
 
     def onCommand(self, Unit, Command, Level, Hue):
             Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
@@ -226,9 +231,11 @@ class BasePlugin:
 
             if Unit == 13:
                  #Hot water setpoint
+                 nValue=float(Level)
                  self.WriteRS485(3,float(Level),1,False)
             elif Unit == 14:
                  #Heating setpoint
+                 nValue=float(Level)
                  self.WriteRS485(1,float(Level),1,False)
             elif Unit == 15:
                  #Mode, when switching mode, need to turn the unit off and on again
