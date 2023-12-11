@@ -64,11 +64,11 @@ class BasePlugin:
         if 9 not in Devices:
             Domoticz.Device(Name="Actual cap",Unit=9,Type=243,Subtype=6,Used=1).Create()
         if 10 not in Devices:
-            Domoticz.Device(Name="Power",Unit=10,Type=248,Subtype=1,Used=1).Create()
+            Domoticz.Device(Name="BLDC Power",Unit=10,Type=248,Subtype=1,Used=1).Create()
         if 11 not in Devices:
-            Domoticz.Device(Name="Voltage",Unit=11,Type=243,Subtype=8,Used=1).Create()
+            Domoticz.Device(Name="BLDC Voltage",Unit=11,Type=243,Subtype=8,Used=1).Create()
         if 12 not in Devices:
-            Domoticz.Device(Name="Current",Unit=12,Type=243,Subtype=23,Used=1).Create()
+            Domoticz.Device(Name="BLDC Current",Unit=12,Type=243,Subtype=23,Used=1).Create()
         if 13 not in Devices:
             Domoticz.Device(Name="Setpoint hot water",Unit=13,Type=242,Subtype=1,Used=1).Create()
         if 14 not in Devices:
