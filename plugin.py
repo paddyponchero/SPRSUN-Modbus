@@ -139,8 +139,8 @@ class BasePlugin:
                  PV_Pump_Output = self.rs485.read_register(198,1,3,False)
                  PV_Required_Cap = self.rs485.read_register(203,1,3,False)
                  PV_Actual_Cap = self.rs485.read_register(204,1,3,False)
-                 PV_Power = self.rs485.read_register(333,1,3,False)   #Strange value
-                 PV_Voltage = self.rs485.read_register(334,0,3,False) #Strange value
+                 PV_Power = self.rs485.read_register(333,1,3,False) * 1000 #kW to W
+                 PV_Voltage = self.rs485.read_register(334,0,3,False)
                  PV_Current = self.rs485.read_register(335,1,3,False)
                  SP_Hot_Water = self.rs485.read_register(3,1,3,False)
                  SP_Heating = self.rs485.read_register(1,1,3,False)
