@@ -70,9 +70,9 @@ class BasePlugin:
         if 12 not in Devices:
             Domoticz.Device(Name="Current",Unit=12,Type=243,Subtype=23,Used=1).Create()
         if 13 not in Devices:
-            Domoticz.Device(Name="Setpoint Hot Water",Unit=13,Type=242,Subtype=1,Used=1).Create()
+            Domoticz.Device(Name="Setpoint hot water",Unit=13,Type=242,Subtype=1,Used=1).Create()
         if 14 not in Devices:
-            Domoticz.Device(Name="Setpoint Heating",Unit=14,Type=242,Subtype=1,Used=1).Create()
+            Domoticz.Device(Name="Setpoint heating",Unit=14,Type=242,Subtype=1,Used=1).Create()
         Options = {"LevelActions": "|| ||", "LevelNames": "Off|Cooling|Heating|Hot Water|Hot Water + Cooling|Hot Water + Heating", "LevelOffHidden": "true", "SelectorStyle": "1"}
         if 15 not in Devices:
             Domoticz.Device(Name="Mode",Unit=15,TypeName="Selector Switch",Options=Options,Image=15,Used=1).Create()
@@ -84,6 +84,9 @@ class BasePlugin:
             Domoticz.Device(Name="Heater",Unit=18,Type=244,Subtype=73,Switchtype=0,Image=15,Used=1).Create()
         if 19 not in Devices:
             Domoticz.Device(Name="AC Linkage",Unit=19,Type=244,Subtype=73,Switchtype=2,Used=1).Create()
+        Options = {"LevelActions": "|| ||", "LevelNames": "Off|Daytime|Night|Eco|Pressure", "LevelOffHidden": "true", "SelectorStyle": "1"}
+        if 20 not in Devices:
+            Domoticz.Device(Name="Fan mode",Unit=20,TypeName="Selector Switch",Options=Options,Image=7,Used=1).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -112,6 +115,7 @@ class BasePlugin:
             ThreeWayValve = 0
             Heater = 0
             AC_Linkage = 0
+            Fan_Mode = 0
 
             # Get data from SPRSUN
             try:
@@ -145,6 +149,7 @@ class BasePlugin:
                  ThreeWayValve = self.rs485.read_bit(11, 2)
                  Heater = self.rs485.read_bit(12, 2)
                  AC_Linkage = self.rs485.read_bit(3, 2)
+                 Fan_Mode = self.rs485.read_register(12,0,3,False)
 
                  #Convert State to Text
                  if Status == 0:
@@ -198,6 +203,7 @@ class BasePlugin:
                 Devices[17].Update(ThreeWayValve,"")
                 Devices[18].Update(Heater,"")
                 Devices[19].Update(AC_Linkage,"")
+                Devices[20].Update(nValue=int((Fan_Mode+1)*10),sValue=str((Fan_Mode+1)*10))
 
                 self.runInterval = 1    # Success so call again in 1x10 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
@@ -223,6 +229,7 @@ class BasePlugin:
                 Domoticz.Log('Three-way valve: {0}'.format(ThreeWayValve))
                 Domoticz.Log('Heater: {0}'.format(Heater))
                 Domoticz.Log('AC_Linkage: {0}'.format(AC_Linkage))
+                Domoticz.Log('Fan mode: {0}'.format(Fan_Mode))
 
     def onCommand(self, Unit, Command, Level, Hue):
             Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
@@ -230,7 +237,14 @@ class BasePlugin:
             sValue=str(Level)
             nValue=int(Level)
 
-            if Unit == 13:
+            if Unit == 5:
+                 #Unit On
+                 if Command == "On":
+                     nValue=1
+                 else:
+                     nValue=0
+                 sValue=Command
+            elif Unit == 13:
                  #Hot water setpoint
                  nValue=float(Level)
                  self.WriteRS485(3,float(Level),1,False)
@@ -248,15 +262,9 @@ class BasePlugin:
                  #if Unit was on, turn back on
                  if Devices[5].nValue == 1:
                       self.WriteRS485(40,1,0,True)
-            elif Unit == 5:
-                 #Unit On
-                 if Command == "On":
-                     nValue=1
-                 else:
-                     nValue=0
-                 sValue=Command
-
-                 self.WriteRS485(40,nValue,0,True)
+            elif Unit == 20:
+                 #Fan mode
+                 self.WriteRS485(12,int((Level/10)-1),0,False)
 
             Devices[Unit].Update(nValue=nValue, sValue=sValue)
             Devices[Unit].Refresh()
