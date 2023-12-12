@@ -56,37 +56,49 @@ class BasePlugin:
         if 5 not in Devices:
             Domoticz.Device(Name="Unit on",Unit=5,Type=244,Subtype=73,Switchtype=0,Image=9,Used=1).Create()
         if 6 not in Devices:
-            Domoticz.Device(Name="Fan output",Unit=6,Type=243,Subtype=6,Used=1).Create()
+            Domoticz.Device(Name="Fan output",Unit=6,Type=243,Subtype=6,Used=0).Create()
         if 7 not in Devices:
-            Domoticz.Device(Name="Pump output",Unit=7,Type=243,Subtype=6,Used=1).Create()
+            Domoticz.Device(Name="Pump output",Unit=7,Type=243,Subtype=6,Used=0).Create()
         if 8 not in Devices:
             Domoticz.Device(Name="Required cap",Unit=8,Type=243,Subtype=6,Used=1).Create()
         if 9 not in Devices:
             Domoticz.Device(Name="Actual cap",Unit=9,Type=243,Subtype=6,Used=1).Create()
         if 10 not in Devices:
-            Domoticz.Device(Name="BLDC Motor power",Unit=10,Type=248,Subtype=1,Used=1).Create()
+            Domoticz.Device(Name="BLDC Motor power",Unit=10,Type=248,Subtype=1,Used=0).Create()
         if 11 not in Devices:
-            Domoticz.Device(Name="BLDC Motor voltage",Unit=11,Type=243,Subtype=8,Used=1).Create()
+            Domoticz.Device(Name="BLDC Motor voltage",Unit=11,Type=243,Subtype=8,Used=0).Create()
         if 12 not in Devices:
-            Domoticz.Device(Name="BLDC Motor current",Unit=12,Type=243,Subtype=23,Used=1).Create()
+            Domoticz.Device(Name="BLDC Motor current",Unit=12,Type=243,Subtype=23,Used=0).Create()
+        Options={}
+        #can be used after release 2023.02: Options={'ValueStep':'0.5';' ValueMin':'10.0';'ValueMax':'55.0';'ValueUnit':'°C';}
         if 13 not in Devices:
-            Domoticz.Device(Name="Setpoint hot water",Unit=13,Type=242,Subtype=1,Used=1).Create()
+            Domoticz.Device(Name="Setpoint hot water",Unit=13,Type=242,Subtype=1,Options=Options,Used=1).Create()
+        Options={}
+        #can be used after release 2023.02: Options={'ValueStep':'0.5';' ValueMin':'10.0';'ValueMax':'55.0';'ValueUnit':'°C';}
         if 14 not in Devices:
-            Domoticz.Device(Name="Setpoint heating",Unit=14,Type=242,Subtype=1,Used=1).Create()
+            Domoticz.Device(Name="Setpoint heating",Unit=14,Type=242,Subtype=1,Options=Options,Used=1).Create()
         Options = {"LevelActions": "|| ||", "LevelNames": "Off|Cooling|Heating|Hot Water|Hot Water + Cooling|Hot Water + Heating", "LevelOffHidden": "true", "SelectorStyle": "1"}
         if 15 not in Devices:
             Domoticz.Device(Name="Mode",Unit=15,TypeName="Selector Switch",Options=Options,Image=15,Used=1).Create()
         if 16 not in Devices:
             Domoticz.Device(Name="Status",Unit=16,Type=243,Subtype=19,Used=1).Create()
         if 17 not in Devices:
-            Domoticz.Device(Name="Three-way valve",Unit=17,Type=244,Subtype=73,Switchtype=0,Used=1).Create()
+            Domoticz.Device(Name="Three-way valve",Unit=17,Type=244,Subtype=73,Switchtype=0,Used=0).Create()
         if 18 not in Devices:
-            Domoticz.Device(Name="Heater",Unit=18,Type=244,Subtype=73,Switchtype=0,Image=15,Used=1).Create()
+            Domoticz.Device(Name="Heater",Unit=18,Type=244,Subtype=73,Switchtype=0,Image=15,Used=0).Create()
         if 19 not in Devices:
-            Domoticz.Device(Name="AC Linkage",Unit=19,Type=244,Subtype=73,Switchtype=2,Used=1).Create()
+            Domoticz.Device(Name="AC Linkage",Unit=19,Type=244,Subtype=73,Switchtype=2,Used=0).Create()
         Options = {"LevelActions": "|| ||", "LevelNames": "Off|Daytime|Night|Eco|Pressure", "LevelOffHidden": "true", "SelectorStyle": "1"}
         if 20 not in Devices:
             Domoticz.Device(Name="Fan mode",Unit=20,TypeName="Selector Switch",Options=Options,Image=7,Used=1).Create()
+        Options={}
+        #can be used after release 2023.02: Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'°C';}
+        if 21 not in Devices:
+            Domoticz.Device(Name="Temp diff hot water",Unit=21,Type=242,Subtype=1,Options=Options,Used=0).Create()
+        Options={}
+        #can be used after release 2023.02: Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'°C';}
+        if 22 not in Devices:
+            Domoticz.Device(Name="Temp diff cooling/heating",Unit=22,Type=242,Subtype=1,Options=Options,Used=0).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -116,6 +128,8 @@ class BasePlugin:
             Heater = 0
             AC_Linkage = 0
             Fan_Mode = 0
+            SP_TempDiff_Hot_Water = 0
+            SP_TempDiff_Cooling_Heating = 0
 
             # Get data from SPRSUN
             try:
@@ -150,6 +164,8 @@ class BasePlugin:
                  Heater = self.rs485.read_bit(12, 2)
                  AC_Linkage = self.rs485.read_bit(3, 2)
                  Fan_Mode = self.rs485.read_register(12,0,3,False)
+                 SP_TempDiff_Hot_Water = self.rs485.read_register(4,1,3,False)
+                 SP_TempDiff_Cooling_Heating = self.rs485.read_register(6,1,3,False)
 
                  #Convert State to Text
                  if Status == 0:
@@ -204,6 +220,8 @@ class BasePlugin:
                 Devices[18].Update(Heater,"")
                 Devices[19].Update(AC_Linkage,"")
                 Devices[20].Update(nValue=int((Fan_Mode+1)*10),sValue=str((Fan_Mode+1)*10))
+                Devices[21].Update(nValue=int(SP_TempDiff_Hot_Water),sValue=str(SP_TempDiff_Hot_Water))
+                Devices[22].Update(nValue=int(SP_TempDiff_Cooling_Heating),sValue=str(SP_TempDiff_Cooling_Heating))
 
                 self.runInterval = 1    # Success so call again in 1x10 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
@@ -230,6 +248,8 @@ class BasePlugin:
                 Domoticz.Log('Heater: {0}'.format(Heater))
                 Domoticz.Log('AC_Linkage: {0}'.format(AC_Linkage))
                 Domoticz.Log('Fan mode: {0}'.format(Fan_Mode))
+                Domoticz.Log('Temp diff hot water: {0:.1f}'.format(SP_TempDiff_Hot_Water))
+                Domoticz.Log('Temp diff cooling/heating: {0:.1f}'.format(SP_TempDiff_Cooling_Heating))
 
     def onCommand(self, Unit, Command, Level, Hue):
             Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
@@ -265,6 +285,14 @@ class BasePlugin:
             elif Unit == 20:
                  #Fan mode
                  self.WriteRS485(12,int((Level/10)-1),0,False)
+            elif Unit == 21:
+                 #Temp diff hot water
+                 nValue=float(Level)
+                 self.WriteRS485(4,float(Level),1,False)
+            elif Unit == 22:
+                 #Temp diff cooling/heating
+                 nValue=float(Level)
+                 self.WriteRS485(6,float(Level),1,False)
 
             Devices[Unit].Update(nValue=nValue, sValue=sValue)
             Devices[Unit].Refresh()
