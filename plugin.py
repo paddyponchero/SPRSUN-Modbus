@@ -266,11 +266,11 @@ class BasePlugin:
                  sValue=Command
             elif Unit == 13:
                  #Hot water setpoint
-                 nValue=float(Level)
+                 nValue=int(Level)
                  self.WriteRS485(3,float(Level),1,False)
             elif Unit == 14:
                  #Heating setpoint
-                 nValue=float(Level)
+                 nValue=int(Level)
                  self.WriteRS485(1,float(Level),1,False)
             elif Unit == 15:
                  #Mode, when switching mode, need to turn the unit off and on again
@@ -287,11 +287,11 @@ class BasePlugin:
                  self.WriteRS485(12,int((Level/10)-1),0,False)
             elif Unit == 21:
                  #Temp diff hot water
-                 nValue=float(Level)
+                 nValue=int(Level)
                  self.WriteRS485(4,float(Level),1,False)
             elif Unit == 22:
                  #Temp diff cooling/heating
-                 nValue=float(Level)
+                 nValue=int(Level)
                  self.WriteRS485(6,float(Level),1,False)
 
             Devices[Unit].Update(nValue=nValue, sValue=sValue)
