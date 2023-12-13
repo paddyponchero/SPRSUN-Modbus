@@ -99,6 +99,64 @@ class BasePlugin:
         #can be used after release 2023.02: Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'°C';}
         if 22 not in Devices:
             Domoticz.Device(Name="Temp diff cooling/heating",Unit=22,Type=242,Subtype=1,Options=Options,Used=0).Create()
+        if 23 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling X1",Unit=23,Type=80,Subtype=5,Used=0).Create()
+        if 24 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling X2",Unit=24,Type=80,Subtype=5,Used=0).Create()
+        if 25 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling X3",Unit=25,Type=80,Subtype=5,Used=0).Create()
+        if 26 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling X4",Unit=26,Type=80,Subtype=5,Used=0).Create()
+        if 27 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling Y1",Unit=27,Type=80,Subtype=5,Used=0).Create()
+        if 28 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling Y2",Unit=28,Type=80,Subtype=5,Used=0).Create()
+        if 29 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling Y3",Unit=29,Type=80,Subtype=5,Used=0).Create()
+        if 30 not in Devices:
+            Domoticz.Device(Name="Eco mode cooling Y4",Unit=30,Type=80,Subtype=5,Used=0).Create()
+        if 31 not in Devices:
+            Domoticz.Device(Name="Eco mode heating X1",Unit=31,Type=80,Subtype=5,Used=0).Create()
+        if 32 not in Devices:
+            Domoticz.Device(Name="Eco mode heating X2",Unit=32,Type=80,Subtype=5,Used=0).Create()
+        if 33 not in Devices:
+            Domoticz.Device(Name="Eco mode heating X3",Unit=33,Type=80,Subtype=5,Used=0).Create()
+        if 34 not in Devices:
+            Domoticz.Device(Name="Eco mode heating X4",Unit=34,Type=80,Subtype=5,Used=0).Create()
+        if 35 not in Devices:
+            Domoticz.Device(Name="Eco mode heating Y1",Unit=35,Type=80,Subtype=5,Used=0).Create()
+        if 36 not in Devices:
+            Domoticz.Device(Name="Eco mode heating Y2",Unit=36,Type=80,Subtype=5,Used=0).Create()
+        if 37 not in Devices:
+            Domoticz.Device(Name="Eco mode heating Y3",Unit=37,Type=80,Subtype=5,Used=0).Create()
+        if 38 not in Devices:
+            Domoticz.Device(Name="Eco mode heating Y4",Unit=38,Type=80,Subtype=5,Used=0).Create()
+        if 39 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water X1",Unit=39,Type=80,Subtype=5,Used=0).Create()
+        if 40 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water X2",Unit=40,Type=80,Subtype=5,Used=0).Create()
+        if 41 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water X3",Unit=41,Type=80,Subtype=5,Used=0).Create()
+        if 42 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water X4",Unit=42,Type=80,Subtype=5,Used=0).Create()
+        if 43 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water Y1",Unit=43,Type=80,Subtype=5,Used=0).Create()
+        if 44 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water Y2",Unit=44,Type=80,Subtype=5,Used=0).Create()
+        if 45 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water Y3",Unit=45,Type=80,Subtype=5,Used=0).Create()
+        if 46 not in Devices:
+            Domoticz.Device(Name="Eco mode hot water Y4",Unit=46,Type=80,Subtype=5,Used=0).Create()
+        if 47 not in Devices:
+            Domoticz.Device(Name="Setpoint cooling eco mode",Unit=47,Type=80,Subtype=5,Used=1).Create()
+        if 48 not in Devices:
+            Domoticz.Device(Name="Setpoint heating eco mode",Unit=48,Type=80,Subtype=5,Used=1).Create()
+        if 49 not in Devices:
+            Domoticz.Device(Name="Setpoint hot water eco mode",Unit=49,Type=80,Subtype=5,Used=1).Create()
+        Options={}
+        #can be used after release 2023.02: Options={'ValueStep':'0.5';' ValueMin':'5.0';'ValueMax':'40.0';'ValueUnit':'°C';}
+        if 50 not in Devices:
+            Domoticz.Device(Name="Setpoint cooling",Unit=50,Type=242,Subtype=1,Options=Options,Used=1).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -130,6 +188,34 @@ class BasePlugin:
             Fan_Mode = 0
             SP_TempDiff_Hot_Water = 0
             SP_TempDiff_Cooling_Heating = 0
+            Eco_Mode_Cooling_X1 = 0
+            Eco_Mode_Cooling_X2 = 0
+            Eco_Mode_Cooling_X3 = 0
+            Eco_Mode_Cooling_X4 = 0
+            Eco_Mode_Cooling_Y1 = 0
+            Eco_Mode_Cooling_Y2 = 0
+            Eco_Mode_Cooling_Y3 = 0
+            Eco_Mode_Cooling_Y4 = 0
+            Eco_Mode_Heating_X1 = 0
+            Eco_Mode_Heating_X2 = 0
+            Eco_Mode_Heating_X3 = 0
+            Eco_Mode_Heating_X4 = 0
+            Eco_Mode_Heating_Y1 = 0
+            Eco_Mode_Heating_Y2 = 0
+            Eco_Mode_Heating_Y3 = 0
+            Eco_Mode_Heating_Y4 = 0
+            Eco_Mode_Hot_Water_X1 = 0
+            Eco_Mode_Hot_Water_X2 = 0
+            Eco_Mode_Hot_Water_X3 = 0
+            Eco_Mode_Hot_Water_X4 = 0
+            Eco_Mode_Hot_Water_Y1 = 0
+            Eco_Mode_Hot_Water_Y2 = 0
+            Eco_Mode_Hot_Water_Y3 = 0
+            Eco_Mode_Hot_Water_Y4 = 0
+            SP_Cooling_Eco_Mode = 0
+            SP_Heating_Eco_Mode = 0
+            SP_Hot_Water_Eco_Mode = 0
+            SP_Cooling = 0
 
             # Get data from SPRSUN
             try:
@@ -166,6 +252,31 @@ class BasePlugin:
                  Fan_Mode = self.rs485.read_register(12,0,3,False)
                  SP_TempDiff_Hot_Water = self.rs485.read_register(4,1,3,False)
                  SP_TempDiff_Cooling_Heating = self.rs485.read_register(6,1,3,False)
+                 Eco_Mode_Cooling_X1 = self.rs485.read_register(276,1,3,True)
+                 Eco_Mode_Cooling_X2 = self.rs485.read_register(277,1,3,True)
+                 Eco_Mode_Cooling_X3 = self.rs485.read_register(278,1,3,True)
+                 Eco_Mode_Cooling_X4 = self.rs485.read_register(279,1,3,True)
+                 Eco_Mode_Cooling_Y1 = self.rs485.read_register(336,1,3,True)
+                 Eco_Mode_Cooling_Y2 = self.rs485.read_register(288,1,3,True)
+                 Eco_Mode_Cooling_Y3 = self.rs485.read_register(289,1,3,True)
+                 Eco_Mode_Cooling_Y4 = self.rs485.read_register(290,1,3,True)
+                 Eco_Mode_Heating_X1 = self.rs485.read_register(280,1,3,True)
+                 Eco_Mode_Heating_X2 = self.rs485.read_register(281,1,3,True)
+                 Eco_Mode_Heating_X3 = self.rs485.read_register(282,1,3,True)
+                 Eco_Mode_Heating_X4 = self.rs485.read_register(283,1,3,True)
+                 Eco_Mode_Heating_Y1 = self.rs485.read_register(291,1,3,True)
+                 Eco_Mode_Heating_Y2 = self.rs485.read_register(292,1,3,True)
+                 Eco_Mode_Heating_Y3 = self.rs485.read_register(293,1,3,True)
+                 Eco_Mode_Heating_Y4 = self.rs485.read_register(337,1,3,True)
+                 Eco_Mode_Hot_Water_X1 = self.rs485.read_register(284,1,3,True)
+                 Eco_Mode_Hot_Water_X2 = self.rs485.read_register(285,1,3,True)
+                 Eco_Mode_Hot_Water_X3 = self.rs485.read_register(286,1,3,True)
+                 Eco_Mode_Hot_Water_X4 = self.rs485.read_register(287,1,3,True)
+                 Eco_Mode_Hot_Water_Y1 = self.rs485.read_register(294,1,3,True)
+                 Eco_Mode_Hot_Water_Y2 = self.rs485.read_register(295,1,3,True)
+                 Eco_Mode_Hot_Water_Y3 = self.rs485.read_register(296,1,3,True)
+                 Eco_Mode_Hot_Water_Y4 = self.rs485.read_register(338,1,3,True)
+                 SP_Cooling = self.rs485.read_register(2,1,3,False)
 
                  #Convert State to Text
                  if Status == 0:
@@ -192,6 +303,64 @@ class BasePlugin:
                       StatusText = "OFF by Change"
                  else:
                       StatusText == "Unknown"
+
+                 #Calculate setpoint for eco mode interpolate
+                 #Cooling:
+                 if PV_Ambient_Temperature <= Eco_Mode_Cooling_X1:
+                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y1
+                 elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X2:
+                       StepValue = (Eco_Mode_Cooling_Y2 - Eco_Mode_Cooling_Y1) / (Eco_Mode_Cooling_X2 - Eco_Mode_Cooling_X1)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X1
+                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y1 + (Steps * StepValue)
+                 elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X3:
+                       StepValue = (Eco_Mode_Cooling_Y3 - Eco_Mode_Cooling_Y2) / (Eco_Mode_Cooling_X3 - Eco_Mode_Cooling_X2)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X2
+                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y2 + (Steps * StepValue)
+                 elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X4:
+                       StepValue = (Eco_Mode_Cooling_Y4 - Eco_Mode_Cooling_Y3) / (Eco_Mode_Cooling_X4 - Eco_Mode_Cooling_X3)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X3
+                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y3 + (Steps * StepValue)
+                 else:
+                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y4
+                 SP_Cooling_Eco_Mode = round(SP_Cooling_Eco_Mode, 1)
+
+                 #Heating:
+                 if PV_Ambient_Temperature <= Eco_Mode_Heating_X1:
+                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y1
+                 elif PV_Ambient_Temperature <= Eco_Mode_Heating_X2:
+                       StepValue = (Eco_Mode_Heating_Y2 - Eco_Mode_Heating_Y1) / (Eco_Mode_Heating_X2 - Eco_Mode_Heating_X1)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X1
+                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y1 + (Steps * StepValue)
+                 elif PV_Ambient_Temperature <= Eco_Mode_Heating_X3:
+                       StepValue = (Eco_Mode_Heating_Y3 - Eco_Mode_Heating_Y2) / (Eco_Mode_Heating_X3 - Eco_Mode_Heating_X2)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X2
+                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y2 + (Steps * StepValue)
+                 elif PV_Ambient_Temperature <= Eco_Mode_Heating_X4:
+                       StepValue = (Eco_Mode_Heating_Y4 - Eco_Mode_Heating_Y3) / (Eco_Mode_Heating_X4 - Eco_Mode_Heating_X3)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X3
+                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y3 + (Steps * StepValue)
+                 else:
+                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y4
+                 SP_Heating_Eco_Mode = round(SP_Heating_Eco_Mode, 1)
+
+                 #Hot_Water:
+                 if PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X1:
+                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y1
+                 elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X2:
+                       StepValue = (Eco_Mode_Hot_Water_Y2 - Eco_Mode_Hot_Water_Y1) / (Eco_Mode_Hot_Water_X2 - Eco_Mode_Hot_Water_X1)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X1
+                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y1 + (Steps * StepValue)
+                 elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X3:
+                       StepValue = (Eco_Mode_Hot_Water_Y3 - Eco_Mode_Hot_Water_Y2) / (Eco_Mode_Hot_Water_X3 - Eco_Mode_Hot_Water_X2)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X2
+                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y2 + (Steps * StepValue)
+                 elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X4:
+                       StepValue = (Eco_Mode_Hot_Water_Y4 - Eco_Mode_Hot_Water_Y3) / (Eco_Mode_Hot_Water_X4 - Eco_Mode_Hot_Water_X3)
+                       Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X3
+                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y3 + (Steps * StepValue)
+                 else:
+                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y4
+                 SP_Hot_Water_Eco_Mode = round(SP_Hot_Water_Eco_Mode, 1)
 
                  self.rs485.serial.close()  #  Close that door !
             except:
@@ -222,6 +391,34 @@ class BasePlugin:
                 Devices[20].Update(nValue=int((Fan_Mode+1)*10),sValue=str((Fan_Mode+1)*10))
                 Devices[21].Update(nValue=int(SP_TempDiff_Hot_Water),sValue=str(SP_TempDiff_Hot_Water))
                 Devices[22].Update(nValue=int(SP_TempDiff_Cooling_Heating),sValue=str(SP_TempDiff_Cooling_Heating))
+                Devices[23].Update(nValue=int(Eco_Mode_Cooling_X1),sValue=str(Eco_Mode_Cooling_X1))
+                Devices[24].Update(nValue=int(Eco_Mode_Cooling_X2),sValue=str(Eco_Mode_Cooling_X2))
+                Devices[25].Update(nValue=int(Eco_Mode_Cooling_X3),sValue=str(Eco_Mode_Cooling_X3))
+                Devices[26].Update(nValue=int(Eco_Mode_Cooling_X4),sValue=str(Eco_Mode_Cooling_X4))
+                Devices[27].Update(nValue=int(Eco_Mode_Cooling_Y1),sValue=str(Eco_Mode_Cooling_Y1))
+                Devices[28].Update(nValue=int(Eco_Mode_Cooling_Y2),sValue=str(Eco_Mode_Cooling_Y2))
+                Devices[29].Update(nValue=int(Eco_Mode_Cooling_Y3),sValue=str(Eco_Mode_Cooling_Y3))
+                Devices[30].Update(nValue=int(Eco_Mode_Cooling_Y4),sValue=str(Eco_Mode_Cooling_Y4))
+                Devices[31].Update(nValue=int(Eco_Mode_Heating_X1),sValue=str(Eco_Mode_Heating_X1))
+                Devices[32].Update(nValue=int(Eco_Mode_Heating_X2),sValue=str(Eco_Mode_Heating_X2))
+                Devices[33].Update(nValue=int(Eco_Mode_Heating_X3),sValue=str(Eco_Mode_Heating_X3))
+                Devices[34].Update(nValue=int(Eco_Mode_Heating_X4),sValue=str(Eco_Mode_Heating_X4))
+                Devices[35].Update(nValue=int(Eco_Mode_Heating_Y1),sValue=str(Eco_Mode_Heating_Y1))
+                Devices[36].Update(nValue=int(Eco_Mode_Heating_Y2),sValue=str(Eco_Mode_Heating_Y2))
+                Devices[37].Update(nValue=int(Eco_Mode_Heating_Y3),sValue=str(Eco_Mode_Heating_Y3))
+                Devices[38].Update(nValue=int(Eco_Mode_Heating_Y4),sValue=str(Eco_Mode_Heating_Y4))
+                Devices[39].Update(nValue=int(Eco_Mode_Hot_Water_X1),sValue=str(Eco_Mode_Hot_Water_X1))
+                Devices[40].Update(nValue=int(Eco_Mode_Hot_Water_X2),sValue=str(Eco_Mode_Hot_Water_X2))
+                Devices[41].Update(nValue=int(Eco_Mode_Hot_Water_X3),sValue=str(Eco_Mode_Hot_Water_X3))
+                Devices[42].Update(nValue=int(Eco_Mode_Hot_Water_X4),sValue=str(Eco_Mode_Hot_Water_X4))
+                Devices[43].Update(nValue=int(Eco_Mode_Hot_Water_Y1),sValue=str(Eco_Mode_Hot_Water_Y1))
+                Devices[44].Update(nValue=int(Eco_Mode_Hot_Water_Y2),sValue=str(Eco_Mode_Hot_Water_Y2))
+                Devices[45].Update(nValue=int(Eco_Mode_Hot_Water_Y3),sValue=str(Eco_Mode_Hot_Water_Y3))
+                Devices[46].Update(nValue=int(Eco_Mode_Hot_Water_Y4),sValue=str(Eco_Mode_Hot_Water_Y4))
+                Devices[47].Update(nValue=int(SP_Cooling_Eco_Mode),sValue=str(SP_Cooling_Eco_Mode))
+                Devices[48].Update(nValue=int(SP_Heating_Eco_Mode),sValue=str(SP_Heating_Eco_Mode))
+                Devices[49].Update(nValue=int(SP_Hot_Water_Eco_Mode),sValue=str(SP_Hot_Water_Eco_Mode))
+                Devices[50].Update(nValue=int(SP_Cooling),sValue=str(SP_Cooling))
 
                 self.runInterval = 1    # Success so call again in 1x10 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
@@ -250,6 +447,34 @@ class BasePlugin:
                 Domoticz.Log('Fan mode: {0}'.format(Fan_Mode))
                 Domoticz.Log('Temp diff hot water: {0:.1f}'.format(SP_TempDiff_Hot_Water))
                 Domoticz.Log('Temp diff cooling/heating: {0:.1f}'.format(SP_TempDiff_Cooling_Heating))
+                Domoticz.Log('Eco_Mode_Cooling_X1: {0:.1f}'.format(Eco_Mode_Cooling_X1))
+                Domoticz.Log('Eco_Mode_Cooling_X2: {0:.1f}'.format(Eco_Mode_Cooling_X2))
+                Domoticz.Log('Eco_Mode_Cooling_X3: {0:.1f}'.format(Eco_Mode_Cooling_X3))
+                Domoticz.Log('Eco_Mode_Cooling_X4: {0:.1f}'.format(Eco_Mode_Cooling_X4))
+                Domoticz.Log('Eco_Mode_Cooling_Y1: {0:.1f}'.format(Eco_Mode_Cooling_Y1))
+                Domoticz.Log('Eco_Mode_Cooling_Y2: {0:.1f}'.format(Eco_Mode_Cooling_Y2))
+                Domoticz.Log('Eco_Mode_Cooling_Y3: {0:.1f}'.format(Eco_Mode_Cooling_Y3))
+                Domoticz.Log('Eco_Mode_Cooling_Y4: {0:.1f}'.format(Eco_Mode_Cooling_Y4))
+                Domoticz.Log('Eco_Mode_Heating_X1: {0:.1f}'.format(Eco_Mode_Heating_X1))
+                Domoticz.Log('Eco_Mode_Heating_X2: {0:.1f}'.format(Eco_Mode_Heating_X2))
+                Domoticz.Log('Eco_Mode_Heating_X3: {0:.1f}'.format(Eco_Mode_Heating_X3))
+                Domoticz.Log('Eco_Mode_Heating_X4: {0:.1f}'.format(Eco_Mode_Heating_X4))
+                Domoticz.Log('Eco_Mode_Heating_Y1: {0:.1f}'.format(Eco_Mode_Heating_Y1))
+                Domoticz.Log('Eco_Mode_Heating_Y2: {0:.1f}'.format(Eco_Mode_Heating_Y2))
+                Domoticz.Log('Eco_Mode_Heating_Y3: {0:.1f}'.format(Eco_Mode_Heating_Y3))
+                Domoticz.Log('Eco_Mode_Heating_Y4: {0:.1f}'.format(Eco_Mode_Heating_Y4))
+                Domoticz.Log('Eco_Mode_Hot_Water_X1: {0:.1f}'.format(Eco_Mode_Hot_Water_X1))
+                Domoticz.Log('Eco_Mode_Hot_Water_X2: {0:.1f}'.format(Eco_Mode_Hot_Water_X2))
+                Domoticz.Log('Eco_Mode_Hot_Water_X3: {0:.1f}'.format(Eco_Mode_Hot_Water_X3))
+                Domoticz.Log('Eco_Mode_Hot_Water_X4: {0:.1f}'.format(Eco_Mode_Hot_Water_X4))
+                Domoticz.Log('Eco_Mode_Hot_Water_Y1: {0:.1f}'.format(Eco_Mode_Hot_Water_Y1))
+                Domoticz.Log('Eco_Mode_Hot_Water_Y2: {0:.1f}'.format(Eco_Mode_Hot_Water_Y2))
+                Domoticz.Log('Eco_Mode_Hot_Water_Y3: {0:.1f}'.format(Eco_Mode_Hot_Water_Y3))
+                Domoticz.Log('Eco_Mode_Hot_Water_Y4: {0:.1f}'.format(Eco_Mode_Hot_Water_Y4))
+                Domoticz.Log('Setpoint cooling eco mode: {0:.1f}'.format(SP_Cooling_Eco_Mode))
+                Domoticz.Log('Setpoint heating eco mode: {0:.1f}'.format(SP_Heating_Eco_Mode))
+                Domoticz.Log('Setpoint hot water eco mode: {0:.1f}'.format(SP_Hot_Water_Eco_Mode))
+                Domoticz.Log('Cooling setpoint: {0:.1f}'.format(SP_Cooling))
 
     def onCommand(self, Unit, Command, Level, Hue):
             Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
@@ -293,6 +518,10 @@ class BasePlugin:
                  #Temp diff cooling/heating
                  nValue=int(Level)
                  self.WriteRS485(6,float(Level),1,False)
+            elif Unit == 50:
+                 #Cooling setpoint
+                 nValue=int(Level)
+                 self.WriteRS485(2,float(Level),1,False)
 
             Devices[Unit].Update(nValue=nValue, sValue=sValue)
             Devices[Unit].Refresh()
