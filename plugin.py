@@ -30,13 +30,21 @@ Requirements:
 """
 
 import minimalmodbus    #v2.1.1
-import Domoticz         #tested on Python 3.9.2 in Domoticz 2021.1 and 2023.1
+import Domoticz         #tested on Python 3.9.2 in Domoticz 2023.2
 
+class SettingToWrite:
+    def __init__(self, register, value, decimalPlaces, signed, isBit):
+        self.register = register
+        self.value = value
+        self.decimalPlaces = decimalPlaces
+        self.signed = signed
+        self.isBit = isBit
 
 class BasePlugin:
     def __init__(self):
         self.runInterval = 1
         self.rs485 = ""
+        self.settingsToWrite = []
         return
 
     def onStart(self):
@@ -219,154 +227,163 @@ class BasePlugin:
 
             # Get data from SPRSUN
             try:
-                 self.rs485 = minimalmodbus.Instrument(Parameters["SerialPort"], int(Parameters["Mode2"]))
-                 self.rs485.serial.baudrate = Parameters["Mode1"]
-                 self.rs485.serial.bytesize = 8
-                 self.rs485.serial.parity = minimalmodbus.serial.PARITY_NONE
-                 self.rs485.serial.stopbits = 1
-                 self.rs485.serial.timeout = 1
-                 self.rs485.serial.exclusive = True # Fix From Forum Member 'lost'
-                 self.rs485.debug = False
-                 self.rs485.mode = minimalmodbus.MODE_RTU
-                 self.rs485.close_port_after_each_call = True
+                self.rs485 = minimalmodbus.Instrument(Parameters["SerialPort"], int(Parameters["Mode2"]))
+                self.rs485.serial.baudrate = Parameters["Mode1"]
+                self.rs485.serial.bytesize = 8
+                self.rs485.serial.parity = minimalmodbus.serial.PARITY_NONE
+                self.rs485.serial.stopbits = 1
+                self.rs485.serial.timeout = 1
+                self.rs485.serial.exclusive = True # Fix From Forum Member 'lost'
+                self.rs485.debug = False
+                self.rs485.mode = minimalmodbus.MODE_RTU
+                self.rs485.close_port_after_each_call = True
 
-                 PV_Return_Water_Temperature = self.rs485.read_register(188,1,3,False)
-                 PV_Outlet_Temperature = self.rs485.read_register(189,1,3,False)
-                 PV_Ambient_Temperature = self.rs485.read_register(190,1,3,False)
-                 PV_Hot_Water_Temperature = self.rs485.read_register(195,1,3,False)
-                 Unit_On = self.rs485.read_bit(40, 1)
-                 PV_Fan_Output = self.rs485.read_register(197,1,3,False)
-                 PV_Pump_Output = self.rs485.read_register(198,1,3,False)
-                 PV_Required_Cap = self.rs485.read_register(203,1,3,False)
-                 PV_Actual_Cap = self.rs485.read_register(204,1,3,False)
-                 PV_Power = self.rs485.read_register(333,1,3,False) * 1000 #kW to W
-                 PV_Voltage = self.rs485.read_register(334,0,3,False)
-                 PV_Current = self.rs485.read_register(335,1,3,False)
-                 SP_Hot_Water = self.rs485.read_register(3,1,3,False)
-                 SP_Heating = self.rs485.read_register(1,1,3,False)
-                 Mode = self.rs485.read_register(0,0,3,False)
-                 Status = self.rs485.read_register(217,0,3,False)
-                 ThreeWayValve = self.rs485.read_bit(11, 2)
-                 Heater = self.rs485.read_bit(12, 2)
-                 AC_Linkage = self.rs485.read_bit(3, 2)
-                 Fan_Mode = self.rs485.read_register(12,0,3,False)
-                 SP_TempDiff_Hot_Water = self.rs485.read_register(4,1,3,False)
-                 SP_TempDiff_Cooling_Heating = self.rs485.read_register(6,1,3,False)
-                 Eco_Mode_Cooling_X1 = self.rs485.read_register(276,1,3,True)
-                 Eco_Mode_Cooling_X2 = self.rs485.read_register(277,1,3,True)
-                 Eco_Mode_Cooling_X3 = self.rs485.read_register(278,1,3,True)
-                 Eco_Mode_Cooling_X4 = self.rs485.read_register(279,1,3,True)
-                 Eco_Mode_Cooling_Y1 = self.rs485.read_register(336,1,3,True)
-                 Eco_Mode_Cooling_Y2 = self.rs485.read_register(288,1,3,True)
-                 Eco_Mode_Cooling_Y3 = self.rs485.read_register(289,1,3,True)
-                 Eco_Mode_Cooling_Y4 = self.rs485.read_register(290,1,3,True)
-                 Eco_Mode_Heating_X1 = self.rs485.read_register(280,1,3,True)
-                 Eco_Mode_Heating_X2 = self.rs485.read_register(281,1,3,True)
-                 Eco_Mode_Heating_X3 = self.rs485.read_register(282,1,3,True)
-                 Eco_Mode_Heating_X4 = self.rs485.read_register(283,1,3,True)
-                 Eco_Mode_Heating_Y1 = self.rs485.read_register(291,1,3,True)
-                 Eco_Mode_Heating_Y2 = self.rs485.read_register(292,1,3,True)
-                 Eco_Mode_Heating_Y3 = self.rs485.read_register(293,1,3,True)
-                 Eco_Mode_Heating_Y4 = self.rs485.read_register(337,1,3,True)
-                 Eco_Mode_Hot_Water_X1 = self.rs485.read_register(284,1,3,True)
-                 Eco_Mode_Hot_Water_X2 = self.rs485.read_register(285,1,3,True)
-                 Eco_Mode_Hot_Water_X3 = self.rs485.read_register(286,1,3,True)
-                 Eco_Mode_Hot_Water_X4 = self.rs485.read_register(287,1,3,True)
-                 Eco_Mode_Hot_Water_Y1 = self.rs485.read_register(294,1,3,True)
-                 Eco_Mode_Hot_Water_Y2 = self.rs485.read_register(295,1,3,True)
-                 Eco_Mode_Hot_Water_Y3 = self.rs485.read_register(296,1,3,True)
-                 Eco_Mode_Hot_Water_Y4 = self.rs485.read_register(338,1,3,True)
-                 SP_Cooling = self.rs485.read_register(2,1,3,False)
+                # Write settings first
+                for setting in self.settingsToWrite:
+                    Domoticz.Log('Writing to register {0} with value {1}'.format(setting.register,setting.value))
+                    if setting.isBit == True:
+                        self.rs485.write_bit(setting.register,setting.value,5) # Value 0 or 1
+                    else:
+                        self.rs485.write_register(setting.register,setting.value,setting.decimalPlaces,6,setting.signed)
+                self.settingsToWrite.clear()
 
-                 #Convert State to Text
-                 if Status == 0:
-                      StatusText = "Unit not Ready"
-                 elif Status == 1:
-                      StatusText = "Unit ON"
-                 elif Status == 2:
-                      StatusText = "OFF by Alarm"
-                 elif Status == 3:
-                      StatusText = "OFF by Timezone"
-                 elif Status == 4:
-                      StatusText = "OFF by SuperV"
-                 elif Status == 5:
-                      StatusText = "OFF by Linkage"
-                 elif Status == 6:
-                      StatusText = "OFF by Keyboad"
-                 elif Status == 7:
-                      StatusText = "Manual Mode"
-                 elif Status == 8:
-                      StatusText = "Anti Freeze"
-                 elif Status == 9:
-                      StatusText = "OFF by AC Linkage"
-                 elif Status == 10:
-                      StatusText = "OFF by Change"
-                 else:
-                      StatusText == "Unknown"
+                PV_Return_Water_Temperature = self.rs485.read_register(188,1,3,False)
+                PV_Outlet_Temperature = self.rs485.read_register(189,1,3,False)
+                PV_Ambient_Temperature = self.rs485.read_register(190,1,3,False)
+                PV_Hot_Water_Temperature = self.rs485.read_register(195,1,3,False)
+                Unit_On = self.rs485.read_bit(40, 1)
+                PV_Fan_Output = self.rs485.read_register(197,1,3,False)
+                PV_Pump_Output = self.rs485.read_register(198,1,3,False)
+                PV_Required_Cap = self.rs485.read_register(203,1,3,False)
+                PV_Actual_Cap = self.rs485.read_register(204,1,3,False)
+                PV_Power = self.rs485.read_register(333,1,3,False) * 1000 #kW to W
+                PV_Voltage = self.rs485.read_register(334,0,3,False)
+                PV_Current = self.rs485.read_register(335,1,3,False)
+                SP_Hot_Water = self.rs485.read_register(3,1,3,False)
+                SP_Heating = self.rs485.read_register(1,1,3,False)
+                Mode = self.rs485.read_register(0,0,3,False)
+                Status = self.rs485.read_register(217,0,3,False)
+                ThreeWayValve = self.rs485.read_bit(11, 2)
+                Heater = self.rs485.read_bit(12, 2)
+                AC_Linkage = self.rs485.read_bit(3, 2)
+                Fan_Mode = self.rs485.read_register(12,0,3,False)
+                SP_TempDiff_Hot_Water = self.rs485.read_register(4,1,3,False)
+                SP_TempDiff_Cooling_Heating = self.rs485.read_register(6,1,3,False)
+                Eco_Mode_Cooling_X1 = self.rs485.read_register(276,1,3,True)
+                Eco_Mode_Cooling_X2 = self.rs485.read_register(277,1,3,True)
+                Eco_Mode_Cooling_X3 = self.rs485.read_register(278,1,3,True)
+                Eco_Mode_Cooling_X4 = self.rs485.read_register(279,1,3,True)
+                Eco_Mode_Cooling_Y1 = self.rs485.read_register(336,1,3,True)
+                Eco_Mode_Cooling_Y2 = self.rs485.read_register(288,1,3,True)
+                Eco_Mode_Cooling_Y3 = self.rs485.read_register(289,1,3,True)
+                Eco_Mode_Cooling_Y4 = self.rs485.read_register(290,1,3,True)
+                Eco_Mode_Heating_X1 = self.rs485.read_register(280,1,3,True)
+                Eco_Mode_Heating_X2 = self.rs485.read_register(281,1,3,True)
+                Eco_Mode_Heating_X3 = self.rs485.read_register(282,1,3,True)
+                Eco_Mode_Heating_X4 = self.rs485.read_register(283,1,3,True)
+                Eco_Mode_Heating_Y1 = self.rs485.read_register(291,1,3,True)
+                Eco_Mode_Heating_Y2 = self.rs485.read_register(292,1,3,True)
+                Eco_Mode_Heating_Y3 = self.rs485.read_register(293,1,3,True)
+                Eco_Mode_Heating_Y4 = self.rs485.read_register(337,1,3,True)
+                Eco_Mode_Hot_Water_X1 = self.rs485.read_register(284,1,3,True)
+                Eco_Mode_Hot_Water_X2 = self.rs485.read_register(285,1,3,True)
+                Eco_Mode_Hot_Water_X3 = self.rs485.read_register(286,1,3,True)
+                Eco_Mode_Hot_Water_X4 = self.rs485.read_register(287,1,3,True)
+                Eco_Mode_Hot_Water_Y1 = self.rs485.read_register(294,1,3,True)
+                Eco_Mode_Hot_Water_Y2 = self.rs485.read_register(295,1,3,True)
+                Eco_Mode_Hot_Water_Y3 = self.rs485.read_register(296,1,3,True)
+                Eco_Mode_Hot_Water_Y4 = self.rs485.read_register(338,1,3,True)
+                SP_Cooling = self.rs485.read_register(2,1,3,False)
 
-                 #Calculate setpoint for eco mode interpolate
-                 #Cooling:
-                 if PV_Ambient_Temperature <= Eco_Mode_Cooling_X1:
-                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y1
-                 elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X2:
-                       StepValue = (Eco_Mode_Cooling_Y2 - Eco_Mode_Cooling_Y1) / (Eco_Mode_Cooling_X2 - Eco_Mode_Cooling_X1)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X1
-                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y1 + (Steps * StepValue)
-                 elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X3:
-                       StepValue = (Eco_Mode_Cooling_Y3 - Eco_Mode_Cooling_Y2) / (Eco_Mode_Cooling_X3 - Eco_Mode_Cooling_X2)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X2
-                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y2 + (Steps * StepValue)
-                 elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X4:
-                       StepValue = (Eco_Mode_Cooling_Y4 - Eco_Mode_Cooling_Y3) / (Eco_Mode_Cooling_X4 - Eco_Mode_Cooling_X3)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X3
-                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y3 + (Steps * StepValue)
-                 else:
-                       SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y4
-                 SP_Cooling_Eco_Mode = round(SP_Cooling_Eco_Mode, 1)
+                #Convert State to Text
+                if Status == 0:
+                    StatusText = "Unit not Ready"
+                elif Status == 1:
+                    StatusText = "Unit ON"
+                elif Status == 2:
+                    StatusText = "OFF by Alarm"
+                elif Status == 3:
+                    StatusText = "OFF by Timezone"
+                elif Status == 4:
+                    StatusText = "OFF by SuperV"
+                elif Status == 5:
+                    StatusText = "OFF by Linkage"
+                elif Status == 6:
+                    StatusText = "OFF by Keyboad"
+                elif Status == 7:
+                    StatusText = "Manual Mode"
+                elif Status == 8:
+                    StatusText = "Anti Freeze"
+                elif Status == 9:
+                    StatusText = "OFF by AC Linkage"
+                elif Status == 10:
+                    StatusText = "OFF by Change"
+                else:
+                    StatusText == "Unknown"
 
-                 #Heating:
-                 if PV_Ambient_Temperature <= Eco_Mode_Heating_X1:
-                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y1
-                 elif PV_Ambient_Temperature <= Eco_Mode_Heating_X2:
-                       StepValue = (Eco_Mode_Heating_Y2 - Eco_Mode_Heating_Y1) / (Eco_Mode_Heating_X2 - Eco_Mode_Heating_X1)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X1
-                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y1 + (Steps * StepValue)
-                 elif PV_Ambient_Temperature <= Eco_Mode_Heating_X3:
-                       StepValue = (Eco_Mode_Heating_Y3 - Eco_Mode_Heating_Y2) / (Eco_Mode_Heating_X3 - Eco_Mode_Heating_X2)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X2
-                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y2 + (Steps * StepValue)
-                 elif PV_Ambient_Temperature <= Eco_Mode_Heating_X4:
-                       StepValue = (Eco_Mode_Heating_Y4 - Eco_Mode_Heating_Y3) / (Eco_Mode_Heating_X4 - Eco_Mode_Heating_X3)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X3
-                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y3 + (Steps * StepValue)
-                 else:
-                       SP_Heating_Eco_Mode = Eco_Mode_Heating_Y4
-                 SP_Heating_Eco_Mode = round(SP_Heating_Eco_Mode, 1)
+                #Calculate setpoint for eco mode interpolate
+                #Cooling:
+                if PV_Ambient_Temperature <= Eco_Mode_Cooling_X1:
+                    SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y1
+                elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X2:
+                    StepValue = (Eco_Mode_Cooling_Y2 - Eco_Mode_Cooling_Y1) / (Eco_Mode_Cooling_X2 - Eco_Mode_Cooling_X1)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X1
+                    SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y1 + (Steps * StepValue)
+                elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X3:
+                    StepValue = (Eco_Mode_Cooling_Y3 - Eco_Mode_Cooling_Y2) / (Eco_Mode_Cooling_X3 - Eco_Mode_Cooling_X2)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X2
+                    SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y2 + (Steps * StepValue)
+                elif PV_Ambient_Temperature <= Eco_Mode_Cooling_X4:
+                    StepValue = (Eco_Mode_Cooling_Y4 - Eco_Mode_Cooling_Y3) / (Eco_Mode_Cooling_X4 - Eco_Mode_Cooling_X3)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Cooling_X3
+                    SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y3 + (Steps * StepValue)
+                else:
+                    SP_Cooling_Eco_Mode = Eco_Mode_Cooling_Y4
+                SP_Cooling_Eco_Mode = round(SP_Cooling_Eco_Mode, 1)
 
-                 #Hot_Water:
-                 if PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X1:
-                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y1
-                 elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X2:
-                       StepValue = (Eco_Mode_Hot_Water_Y2 - Eco_Mode_Hot_Water_Y1) / (Eco_Mode_Hot_Water_X2 - Eco_Mode_Hot_Water_X1)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X1
-                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y1 + (Steps * StepValue)
-                 elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X3:
-                       StepValue = (Eco_Mode_Hot_Water_Y3 - Eco_Mode_Hot_Water_Y2) / (Eco_Mode_Hot_Water_X3 - Eco_Mode_Hot_Water_X2)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X2
-                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y2 + (Steps * StepValue)
-                 elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X4:
-                       StepValue = (Eco_Mode_Hot_Water_Y4 - Eco_Mode_Hot_Water_Y3) / (Eco_Mode_Hot_Water_X4 - Eco_Mode_Hot_Water_X3)
-                       Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X3
-                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y3 + (Steps * StepValue)
-                 else:
-                       SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y4
-                 SP_Hot_Water_Eco_Mode = round(SP_Hot_Water_Eco_Mode, 1)
+                #Heating:
+                if PV_Ambient_Temperature <= Eco_Mode_Heating_X1:
+                    SP_Heating_Eco_Mode = Eco_Mode_Heating_Y1
+                elif PV_Ambient_Temperature <= Eco_Mode_Heating_X2:
+                    StepValue = (Eco_Mode_Heating_Y2 - Eco_Mode_Heating_Y1) / (Eco_Mode_Heating_X2 - Eco_Mode_Heating_X1)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X1
+                    SP_Heating_Eco_Mode = Eco_Mode_Heating_Y1 + (Steps * StepValue)
+                elif PV_Ambient_Temperature <= Eco_Mode_Heating_X3:
+                    StepValue = (Eco_Mode_Heating_Y3 - Eco_Mode_Heating_Y2) / (Eco_Mode_Heating_X3 - Eco_Mode_Heating_X2)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X2
+                    SP_Heating_Eco_Mode = Eco_Mode_Heating_Y2 + (Steps * StepValue)
+                elif PV_Ambient_Temperature <= Eco_Mode_Heating_X4:
+                    StepValue = (Eco_Mode_Heating_Y4 - Eco_Mode_Heating_Y3) / (Eco_Mode_Heating_X4 - Eco_Mode_Heating_X3)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Heating_X3
+                    SP_Heating_Eco_Mode = Eco_Mode_Heating_Y3 + (Steps * StepValue)
+                else:
+                    SP_Heating_Eco_Mode = Eco_Mode_Heating_Y4
+                SP_Heating_Eco_Mode = round(SP_Heating_Eco_Mode, 1)
 
-                 self.rs485.serial.close()  #  Close that door !
-            except:
+                #Hot_Water:
+                if PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X1:
+                    SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y1
+                elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X2:
+                    StepValue = (Eco_Mode_Hot_Water_Y2 - Eco_Mode_Hot_Water_Y1) / (Eco_Mode_Hot_Water_X2 - Eco_Mode_Hot_Water_X1)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X1
+                    SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y1 + (Steps * StepValue)
+                elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X3:
+                    StepValue = (Eco_Mode_Hot_Water_Y3 - Eco_Mode_Hot_Water_Y2) / (Eco_Mode_Hot_Water_X3 - Eco_Mode_Hot_Water_X2)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X2
+                    SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y2 + (Steps * StepValue)
+                elif PV_Ambient_Temperature <= Eco_Mode_Hot_Water_X4:
+                    StepValue = (Eco_Mode_Hot_Water_Y4 - Eco_Mode_Hot_Water_Y3) / (Eco_Mode_Hot_Water_X4 - Eco_Mode_Hot_Water_X3)
+                    Steps = PV_Ambient_Temperature - Eco_Mode_Hot_Water_X3
+                    SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y3 + (Steps * StepValue)
+                else:
+                    SP_Hot_Water_Eco_Mode = Eco_Mode_Hot_Water_Y4
+                SP_Hot_Water_Eco_Mode = round(SP_Hot_Water_Eco_Mode, 1)
+
+                self.rs485.serial.close()  #  Close that door !
+            except Exception as err:
+                Domoticz.Log(f"Unexpected {err=}, {type(err)=}")
                 Domoticz.Heartbeat(1)   # set Heartbeat to 1 second to get us back here for quick retry.
                 self.runInterval = 1    # call again in 1 second
-                Domoticz.Log("**** SPRSUN Connection problem ****");
             else:
                 #Update devices
                 Devices[1].Update(0,str(PV_Return_Water_Temperature))
@@ -477,65 +494,56 @@ class BasePlugin:
                 Domoticz.Log('Cooling setpoint: {0:.1f}'.format(SP_Cooling))
 
     def onCommand(self, Unit, Command, Level, Hue):
-            Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
+        Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
 
-            sValue=str(Level)
+        sValue=str(Level)
+        nValue=int(Level)
+
+        if Unit == 5:
+            #Unit On
+            if Command == "On":
+                nValue=1
+                self.settingsToWrite.append(SettingToWrite(40,1,0,False,True))
+            else:
+                nValue=0
+                self.settingsToWrite.append(SettingToWrite(40,0,0,False,True))
+            sValue=Command
+        elif Unit == 13:
+            #Hot water setpoint
             nValue=int(Level)
+            self.settingsToWrite.append(SettingToWrite(3,float(Level),1,False,False))
+        elif Unit == 14:
+            #Heating setpoint
+            nValue=int(Level)
+            self.settingsToWrite.append(SettingToWrite(1,float(Level),1,False,False))
+        elif Unit == 15:
+            #Mode, when switching mode, need to turn the unit off and on again
+            if Devices[5].nValue == 1:
+                self.settingsToWrite.append(SettingToWrite(40,0,0,False,True))
 
-            if Unit == 5:
-                 #Unit On
-                 if Command == "On":
-                     nValue=1
-                 else:
-                     nValue=0
-                 sValue=Command
-            elif Unit == 13:
-                 #Hot water setpoint
-                 nValue=int(Level)
-                 self.WriteRS485(3,float(Level),1,False)
-            elif Unit == 14:
-                 #Heating setpoint
-                 nValue=int(Level)
-                 self.WriteRS485(1,float(Level),1,False)
-            elif Unit == 15:
-                 #Mode, when switching mode, need to turn the unit off and on again
-                 if Devices[5].nValue == 1:
-                      self.WriteRS485(40,0,0,True)
+            self.settingsToWrite.append(SettingToWrite(0,int((Level/10)-1),0,False,False))
 
-                 self.WriteRS485(0,int((Level/10)-1),0,False)
+            #if Unit was on, turn back on
+            if Devices[5].nValue == 1:
+                self.settingsToWrite.append(SettingToWrite(40,1,0,False,True))
+        elif Unit == 20:
+            #Fan mode
+            self.settingsToWrite.append(SettingToWrite(12,int((Level/10)-1),0,False,False))
+        elif Unit == 21:
+            #Temp diff hot water
+            nValue=int(Level)
+            self.settingsToWrite.append(SettingToWrite(4,float(Level),1,False,False))
+        elif Unit == 22:
+            #Temp diff cooling/heating
+            nValue=int(Level)
+            self.settingsToWrite.append(SettingToWrite(6,float(Level),1,False,False))
+        elif Unit == 50:
+            #Cooling setpoint
+            nValue=int(Level)
+            self.settingsToWrite.append(SettingToWrite(2,float(Level),1,False,False))
 
-                 #if Unit was on, turn back on
-                 if Devices[5].nValue == 1:
-                      self.WriteRS485(40,1,0,True)
-            elif Unit == 20:
-                 #Fan mode
-                 self.WriteRS485(12,int((Level/10)-1),0,False)
-            elif Unit == 21:
-                 #Temp diff hot water
-                 nValue=int(Level)
-                 self.WriteRS485(4,float(Level),1,False)
-            elif Unit == 22:
-                 #Temp diff cooling/heating
-                 nValue=int(Level)
-                 self.WriteRS485(6,float(Level),1,False)
-            elif Unit == 50:
-                 #Cooling setpoint
-                 nValue=int(Level)
-                 self.WriteRS485(2,float(Level),1,False)
-
-            Devices[Unit].Update(nValue=nValue, sValue=sValue)
-            Devices[Unit].Refresh()
-
-    def WriteRS485(self, Register, Value, DecimalPlaces, IsBit):
-            try:
-                 if IsBit == True:
-                     self.rs485.write_bit(Register,Value,5) # Value 0 or 1
-                 else:
-                     self.rs485.write_register(Register,Value,DecimalPlaces,6,False)
-
-                 self.rs485.serial.close()
-            except:
-                Domoticz.Log("**** SPRSUN Connection problem when writing ****");
+        Devices[Unit].Update(nValue=nValue, sValue=sValue)
+        Devices[Unit].Refresh()
 
 global _plugin
 _plugin = BasePlugin()
