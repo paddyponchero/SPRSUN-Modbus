@@ -165,6 +165,9 @@ class BasePlugin:
         #can be used after release 2023.02: Options={'ValueStep':'0.5';' ValueMin':'5.0';'ValueMax':'40.0';'ValueUnit':'°C';}
         if 50 not in Devices:
             Domoticz.Device(Name="Setpoint cooling",Unit=50,Type=242,Subtype=1,Options=Options,Used=1).Create()
+        Options = {"LevelActions": "|| ||", "LevelNames": "Off|Normal|Demand|Interval", "LevelOffHidden": "true", "SelectorStyle": "1"}
+        if 51 not in Devices:
+            Domoticz.Device(Name="Pomp mode",Unit=51,TypeName="Selector Switch",Options=Options,Image=11,Used=1).Create()
 
     def onStop(self):
         Domoticz.Log("SPRSUN-Modbus plugin stop")
@@ -224,6 +227,7 @@ class BasePlugin:
             SP_Heating_Eco_Mode = 0
             SP_Hot_Water_Eco_Mode = 0
             SP_Cooling = 0
+            Pomp_Mode = 0
 
             # Get data from SPRSUN
             try:
@@ -294,6 +298,7 @@ class BasePlugin:
                 Eco_Mode_Hot_Water_Y3 = self.rs485.read_register(296,1,3,True)
                 Eco_Mode_Hot_Water_Y4 = self.rs485.read_register(338,1,3,True)
                 SP_Cooling = self.rs485.read_register(2,1,3,False)
+                Pomp_Mode = self.rs485.read_register(11,0,3,False)
 
                 #Convert State to Text
                 if Status == 0:
@@ -436,6 +441,7 @@ class BasePlugin:
                 Devices[48].Update(nValue=int(SP_Heating_Eco_Mode),sValue=str(SP_Heating_Eco_Mode))
                 Devices[49].Update(nValue=int(SP_Hot_Water_Eco_Mode),sValue=str(SP_Hot_Water_Eco_Mode))
                 Devices[50].Update(nValue=int(SP_Cooling),sValue=str(SP_Cooling))
+                Devices[51].Update(nValue=int((Pomp_Mode+1)*10),sValue=str((Pomp_Mode+1)*10))
 
                 self.runInterval = 1    # Success so call again in 1x10 seconds.
                 Domoticz.Heartbeat(10)  # Sucesss so set Heartbeat to 10 second intervals.
@@ -492,6 +498,7 @@ class BasePlugin:
                 Domoticz.Log('Setpoint heating eco mode: {0:.1f}'.format(SP_Heating_Eco_Mode))
                 Domoticz.Log('Setpoint hot water eco mode: {0:.1f}'.format(SP_Hot_Water_Eco_Mode))
                 Domoticz.Log('Cooling setpoint: {0:.1f}'.format(SP_Cooling))
+                Domoticz.Log('Pomp mode: {0}'.format(Pomp_Mode))
 
     def onCommand(self, Unit, Command, Level, Hue):
         Domoticz.Log("Something changed for " + Devices[Unit].Name + ", DeviceID = " + str(Unit) + ". New setpoint: " + str(Level) + ". New Command: " + Command)
@@ -541,6 +548,9 @@ class BasePlugin:
             #Cooling setpoint
             nValue=int(Level)
             self.settingsToWrite.append(SettingToWrite(2,float(Level),1,False,False))
+        elif Unit == 51:
+            #Pomp mode
+            self.settingsToWrite.append(SettingToWrite(11,int((Level/10)-1),0,False,False))
 
         Devices[Unit].Update(nValue=nValue, sValue=sValue)
         Devices[Unit].Refresh()
