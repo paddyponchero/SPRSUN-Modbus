@@ -86,10 +86,10 @@ class BasePlugin:
             Domoticz.Device(Name="BLDC Motor voltage",Unit=11,Type=243,Subtype=8,Used=0).Create()
         if 12 not in Devices:
             Domoticz.Device(Name="BLDC Motor current",Unit=12,Type=243,Subtype=23,Used=0).Create()
-Options={'ValueStep':'0.5';' ValueMin':'10.0';'ValueMax':'55.0';'ValueUnit':'°C';}
+        Options={'ValueStep':'0.5';' ValueMin':'10.0';'ValueMax':'55.0';'ValueUnit':'C';}
         if 13 not in Devices:
             Domoticz.Device(Name="Setpoint hot water",Unit=13,Type=242,Subtype=1,Options=Options,Used=1).Create()
-Options={'ValueStep':'0.5';' ValueMin':'10.0';'ValueMax':'55.0';'ValueUnit':'°C';}
+        Options={'ValueStep':'0.5';' ValueMin':'10.0';'ValueMax':'55.0';'ValueUnit':'C';}
         if 14 not in Devices:
             Domoticz.Device(Name="Setpoint heating",Unit=14,Type=242,Subtype=1,Options=Options,Used=1).Create()
         Options = {"LevelActions": "|| ||", "LevelNames": "Off|Cooling|Heating|Hot Water|Hot Water + Cooling|Hot Water + Heating", "LevelOffHidden": "true", "SelectorStyle": "1"}
@@ -106,10 +106,10 @@ Options={'ValueStep':'0.5';' ValueMin':'10.0';'ValueMax':'55.0';'ValueUnit':'°C
         Options = {"LevelActions": "|| ||", "LevelNames": "Off|Daytime|Night|Eco|Pressure", "LevelOffHidden": "true", "SelectorStyle": "1"}
         if 20 not in Devices:
             Domoticz.Device(Name="Fan mode",Unit=20,TypeName="Selector Switch",Options=Options,Image=7,Used=1).Create()
-Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'°C';}
+        Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'C';}
         if 21 not in Devices:
             Domoticz.Device(Name="Temp diff hot water",Unit=21,Type=242,Subtype=1,Options=Options,Used=0).Create()
-Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'°C';}
+        Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'C';}
         if 22 not in Devices:
             Domoticz.Device(Name="Temp diff cooling/heating",Unit=22,Type=242,Subtype=1,Options=Options,Used=0).Create()
         if 23 not in Devices:
@@ -166,7 +166,7 @@ Options={'ValueStep':'0.5';' ValueMin':'1.0';'ValueMax':'15.0';'ValueUnit':'°C'
             Domoticz.Device(Name="Setpoint heating eco mode",Unit=48,Type=80,Subtype=5,Used=1).Create()
         if 49 not in Devices:
             Domoticz.Device(Name="Setpoint hot water eco mode",Unit=49,Type=80,Subtype=5,Used=1).Create()
-Options={'ValueStep':'0.5';' ValueMin':'5.0';'ValueMax':'40.0';'ValueUnit':'°C';}
+        Options={'ValueStep':'0.5';' ValueMin':'5.0';'ValueMax':'40.0';'ValueUnit':'C';}
         if 50 not in Devices:
             Domoticz.Device(Name="Setpoint cooling",Unit=50,Type=242,Subtype=1,Options=Options,Used=1).Create()
         Options = {"LevelActions": "|| ||", "LevelNames": "Off|Normal|Demand|Interval", "LevelOffHidden": "true", "SelectorStyle": "1"}
